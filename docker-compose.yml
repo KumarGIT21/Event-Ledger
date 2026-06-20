@@ -1,0 +1,39 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: event_ledger
+      MYSQL_USER: eventledger
+      MYSQL_PASSWORD: eventledger
+    ports:
+      - "3308:3308"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ueventledger", "-peventledger"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  account-service:
+    build:
+      context: .
+      dockerfile: account-service/Dockerfile
+    environment:
+      SERVER_PORT: 8084
+    ports:
+      - "8084:8084"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  event-gateway:
+    build:
+      context: .
+      dockerfile: event-gateway/Dockerfile
+    environment:
+      SERVER_PORT: 8083
+      ACCOUNT_SERVICE_URL: http://account-service:8084
+    ports:
+      - "8083:8083"
+    depends_on:
+      - account-service

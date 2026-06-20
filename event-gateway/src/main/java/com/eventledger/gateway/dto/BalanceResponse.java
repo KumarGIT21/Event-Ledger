@@ -1,0 +1,12 @@
+package com.eventledger.gateway.dto;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+
+public record BalanceResponse(
+        String accountId,
+        BigDecimal balance,
+        String currency,
+        Instant asOf
+) {
+}

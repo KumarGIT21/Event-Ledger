@@ -1,0 +1,26 @@
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:gateway_test;DB_CLOSE_DELAY=-1;MODE=MySQL
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+account-service:
+  base-url: http://localhost:${wiremock.server.port:8081}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      accountService:
+        slidingWindowSize: 4
+        minimumNumberOfCalls: 2
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+  retry:
+    instances:
+      accountService:
+        maxAttempts: 2
+        waitDuration: 50ms

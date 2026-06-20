@@ -1,0 +1,3 @@
+com/eventledger/gateway/integration/EndToEndIntegrationTest.class
+com/eventledger/gateway/web/EventControllerTest.class
+com/eventledger/gateway/web/ResiliencyTest.class
